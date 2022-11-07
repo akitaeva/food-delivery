@@ -7,9 +7,11 @@ import classes from './AvailableMeals.module.css';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchDishes = async () => {
+      setIsLoading(true);
       const response = await fetch(
         'https://quickmeals-18580-default-rtdb.firebaseio.com/dishes.json'
       );
@@ -26,9 +28,18 @@ const AvailableMeals = () => {
         });
       }
       setMeals(availableDishes);
+      setIsLoading(false);
     };
     fetchDishes();
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className={classes['meals-loading']}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
 
   const mealsList = meals.map((meal) => (
     <MealItem
